@@ -29,12 +29,17 @@ public class CoffeePayment {
         }
     }
 
-    public static String selectPerson(List<Person> people, List<String> namePool) {
-        // Randomly select a name from the pool
+    public static void selectPerson(List<Person> people, List<String> namePool) {
+
         Random random = new Random();
         String selectedPerson = namePool.get(random.nextInt(namePool.size()));
+        for (Person person : people) {
+            if (person.getName().equals(selectedPerson)) {
+                person.reduceMultiplier();
+                break;
+            }
+        }
         System.out.println(selectedPerson + " pays for the team coffee trip today.");
-        return selectedPerson;
     }
     public static void addPerson(List<Person> people, List<String> namePool, Scanner scanner) {
         System.out.println("Enter the name and price of the person's preferred drink separated by a comma:");
@@ -54,7 +59,6 @@ public class CoffeePayment {
         }
         Person newPerson = new Person(name, drinkPrice);
         people.add(newPerson);
-        // Update the name pool with the new person's name and multiplier
         for (int i = 0; i < newPerson.getMultiplier(); i++) {
             namePool.add(newPerson.getName());
         }
@@ -62,15 +66,17 @@ public class CoffeePayment {
 
     public static void runSequence(List<Person> people, List<String> namePool){
         Scanner scanner = new Scanner(System.in);
-
-
-        // Interactively add people until the user decides to stop
-        String choice;
-        do {
+        String choice = "";
+        while (!choice.equalsIgnoreCase("done")) {
             addPerson(people, namePool, scanner);
-            System.out.println("Do you want to add another person? (yes/no)");
-            choice = scanner.nextLine().toLowerCase();
-        } while (choice.equals("yes"));
+            System.out.println("Enter 'done' if you've finished adding people, or press Enter to add another person:");
+            choice = scanner.nextLine().trim().toLowerCase();
+        }
+    
+        // If the choice is "done", select a person
+        if (choice.equalsIgnoreCase("done")) {
+            selectPerson(people, namePool);
+        }
     }
 
     public static void main(String[] args) {
@@ -78,18 +84,5 @@ public class CoffeePayment {
         List<String> namePool = new ArrayList<>();
         
         runSequence(people, namePool);
-
-        for (int day = 1; day <= 5; day++) {
-            System.out.println("Day " + day + ":");
-            String selectedPerson = selectPerson(people, namePool);
-
-            // Reduce the multiplier for the selected person
-            for (Person person : people) {
-                if (person.getName().equals(selectedPerson)) {
-                    person.reduceMultiplier();
-                    break;
-                }
-            }
-        }
     }
 }
