@@ -23,22 +23,12 @@ public class CoffeePayment {
         public int getMultiplier() {
             return multiplier;
         }
-
-        public void reduceMultiplier() {
-            this.multiplier = Math.max(1, this.multiplier / 2);
-        }
     }
 
     public static void selectPerson(List<Person> people, List<String> namePool) {
 
         Random random = new Random();
         String selectedPerson = namePool.get(random.nextInt(namePool.size()));
-        for (Person person : people) {
-            if (person.getName().equals(selectedPerson)) {
-                person.reduceMultiplier();
-                break;
-            }
-        }
         System.out.println(selectedPerson + " pays for the team coffee trip today.");
     }
     public static void addPerson(List<Person> people, List<String> namePool, Scanner scanner) {
